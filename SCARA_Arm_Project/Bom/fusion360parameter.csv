@@ -1,0 +1,48 @@
+名称,单位,表达式,值,注释,收藏夹
+servoshaftoffsetX,mm,10 mm,10.00,,false
+servoshaftoffsetY,mm,10 mm,10.00,,false
+servoleftmountdist,mm,35.5 mm,35.50,,false
+servorightmountdist,mm,14.5 mm,14.50,,false
+servomountdistY,mm,9.5 mm,9.50,ditance between mount holes ,false
+servomountdia,mm,4 mm,4.00,,false
+housingbackplateX,mm,100 mm + ( materialthickness * 2 ),112.00,overall length,false
+housingbackplateY,mm,50 mm,50.00,,false
+housingsideX,mm,48 mm,48.00,,false
+housingsideY,mm,housingbackplateY,50.00,,false
+linearraildia,mm,6 mm,6.00,,false
+linearraildist,mm,30 mm,30.00,distance beween linear rail,false
+linearrailoffsetX,mm,8 mm,8.00,,false
+materialthickness,mm,6 mm,6.00,,false
+tabsize,mm,12.5 mm,12.50,,false
+tabkerf,mm,-0.15 mm,-0.15,,false
+mountblockholedist,mm,7.5 mm,7.50,,false
+mountblockholedia,mm,3 mm,3.00,,false
+servoshaftdia,mm,8 mm,8.00,,false
+linklength1,mm,18 mm,18.00,,false
+linklength2,mm,linklength1,18.00,,false
+linkdia,mm,3 mm,3.00,,false
+mountblockdia,mm,4.2 mm,4.20,,false
+mounblocklen,mm,15 mm,15.00,,false
+housingrooflen,mm,50 mm,50.00,,false
+material_thickness,mm,5.5 mm,5.50,,false
+outer_dia,mm,70 mm,70.00,,false
+bearing_distance,mm,108 mm,108.00,,false
+walls_thickness,mm,3 mm,3.00,,false
+limit_x,mm,60 mm,60.00,,false
+limit_y,mm,50 mm,50.00,,false
+bearing_inner_dia,mm,30 mm,30.00,this is the inner dia of the bearing,false
+inner_housing_outer_dia,mm,bearing_inner_dia + 4 mm,34.00,,false
+bearing_thickness,mm,7 mm,7.00,,false
+inner_housing_bottom_extrude,mm,( bearing_thickness / 2 ),3.50,,false
+inner_top_extrude,mm,3 mm,3.00,,false
+bearing_outer_dia,mm,42 mm,42.00,,false
+outer_housing_inner_dia,mm,bearing_outer_dia - 5 mm,37.00,,false
+outer_housing_outer_dia,mm,bearing_outer_dia + 8 mm,50.00,,false
+inner_housing_inner_dia,mm,bearing_inner_dia - 0.4 mm,29.60,,true
+outer_housing_outer_bearing_dia,mm,bearing_outer_dia + 0.4 mm,42.40,,true
+outer_housing_top_extrude,mm,3 mm,3.00,,false
+outer_housing_bottom_extrude,mm,7 mm,7.00,,false
+mount_holes_dia,mm,3 mm,3.00,,false
+outer_mount_hole_extrude,mm,inner_housing_bottom_extrude + outer_housing_top_extrude,6.50,,false
+servo_width,mm,23 mm + 0.4 mm,23.40,,true
+servo_height,mm,12 mm + 0.4 mm,12.40,,true

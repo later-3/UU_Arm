@@ -1,69 +1,157 @@
-# SCARA Arm - Development Log
-
-This document records the step-by-step development process, challenges, and key code snippets for the SCARA Arm project.
+# SCARA Arm - 项目计划与开发日志
 
 ---
 
-## 2025年8月2日: Milestone 1 - First Motor Movement Success!
+## **第一部分: 项目计划**
 
-### **Objective:**
-To verify the basic hardware chain by driving a single NEMA 17 stepper motor using the Arduino Uno, CNC Shield V3, and a TMC2209 driver.
+*本部分概述了项目的战略规划，将其分解为可执行的阶段和任务，并将随着项目的进展而更新。*
 
-### **Process & Challenges:**
+### **指导原则：第一性原理与专业工作流**
 
-1.  **Initial Setup:** Connected the TMC2209 driver and a NEMA 17 motor to the X-axis port on the CNC Shield.
-2.  **Initial Failure:** The motor did not respond, despite the Arduino code running correctly (confirmed via Serial Monitor output).
-3.  **Troubleshooting:**
-    *   Verified the 12V motor power supply and 5V logic power supply to the TMC2209 driver pins (`VM` & `VIO`) using a multimeter. Both were correct.
-    *   Swapped the TMC2209 driver and the stepper motor with spares, but the issue persisted. This ruled out individual component failure.
-    *   Moved the setup to the Y-axis and Z-axis ports, but the motor still did not move. This suggested a global issue rather than a single faulty axis channel.
-4.  **Breakthrough:** After consulting the documentation for the specific CNC Shield, we identified the root cause: **The global Enable Pin (D8) was not being activated in the code.**
+我们的核心方法是建立在一个坚实、可验证的基础之上。我们没有直接采用原作者的自定义软件（这会将我们锁定在一个封闭的生态系统中），而是选择将他优秀的机械设计与工业标准的运动控制固件GRBL相结合。这种方式使我们能够利用庞大的专业工具生态系统（如Universal Gcode Sender），并将我们自己的精力专注于项目独特的挑战（如运动学、计算机视觉等），而不是重复制造轮子。
 
-### **Key Finding:**
+### **阶段一: 基础构建与硬件验证 (目标：“它能动”阶段)**
 
-The CNC Shield V3 requires **Arduino Pin D8** to be pulled **LOW** to enable all stepper motor drivers. Without this, the drivers remain in a disabled state and will not respond to STEP pulses.
+*   **目标:** 确保每一个独立的硬件组件都能正常工作，并且我们能够可靠地控制单个电机，为后续的整机组装打下坚实的基础。
 
-### **Final Working Code for X-Axis Test:**
+*   **任务列表:**
+    - [x] **已完成:** 采购核心组件 (Arduino Uno, CNC Shield, TMC2209驱动, NEMA 17步进电机, 12V电源)。
+    - [x] **已完成:** 在开发机 (Windows) 上搭建Arduino IDE环境。
+    - [x] **已完成:** 使用基础测试代码 (`BasicStepperDriver`库) 成功驱动单个步进电机。
+        - *子任务 (已完成):* 解决初期的硬件不响应问题。
+        - *子任务 (已完成):* 发现并验证了CNC Shield的全局使能引脚(D8)的关键作用。
+    - [x] **已完成:** 安装并配置Universal Gcode Sender (UGS)作为主要的控制软件。
+    - [x] **已完成:** 通过UGS发送G-code指令成功控制电机。
+    - [x] **已完成:** 集成并配置北通手柄，以实现直观的手动控制（点动）。
 
-This code successfully drives the X-axis motor and serves as the definitive hardware verification script for our setup.
+### **阶段二: 整机组装与GRBL配置 (目标：“它动得对”阶段)**
 
-```cpp
-#include <Arduino.h>
-#include "BasicStepperDriver.h"
+*   **目标:** 组装完成SCARA臂的完整机械结构，并配置GRBL的核心参数，使其能够理解机械臂独特的几何构造并正确地运动。
 
-// CNC Shield v3 Pin Definitions
-#define ENABLE_PIN 8 // CRITICAL! This is the master switch for all drivers.
+*   **任务列表:**
+    - [ ] **进行中:** 3D打印所有`scara-s1`项目的结构件。
+        - [x] **已完成:** 打印 `top.stl`。
+        - [ ] **进行中:** 打印 `Bottom.stl`, `Front.stl`, 及其他 `OpenBox` 组件。
+        - [ ] **待办:** 打印所有剩余的臂部和底座组件。
+    - [ ] **待办:** 根据BOM表采购所有剩余的非打印标准件 (轴承, 同步带, 螺丝等)。
+    - [ ] **待办:** 组装SCARA臂的完整机械结构。
+    - [ ] **待办:** 安装所有电机并将其连接到CNC Shield。
+    - [ ] **待办:** 为SCARA运动学配置GRBL参数 (`$$`命令)。
+        - *子任务:* 为旋转轴设置正确的“步数/度” ($100, $101, $102)。
+        - *子任务:* 为各轴设置合适的最大速率和加速度 ($110-$112, $120-$122)。
+    - [ ] **待办:** 使用UGS校准并测试每个轴的全行程运动。
 
-#define DIR_PIN    5 // X-Axis Direction Pin
-#define STEP_PIN   2 // X-Axis Step Pin
+### **阶段三: 运动学与应用开发 (目标：“它很聪明”阶段)**
 
-// Motor Parameters
-#define MOTOR_STEPS 200 // Steps per revolution for NEMA 17
-#define RPM 60          // A stable, low RPM for testing
-#define MICROSTEPS 8    // Default microstepping for TMC2209 with no jumpers
+*   **目标:** 实现将真实世界任务（写字、翻页）转换为GRBL驱动的机械臂能够理解的G-code的软件。
 
-// Create a driver instance
-BasicStepperDriver stepper(MOTOR_STEPS, DIR_PIN, STEP_PIN);
+*   **任务列表:**
+    - [ ] **待办:** 在高级语言 (Python) 中为我们的SCARA几何模型开发正向与逆向运动学算法。
+    - [ ] **待办:** 创建一个基于Python的上位机应用，用于向机械臂发送G-code指令。
+    - [ ] **待办:** 在上位机应用中实现基础功能，例如 `moveTo(x, y, z)`。
+    - [ ] **待办:** 设计并集成末端执行器 (笔夹)。
+    - [ ] **待办:** 实现机械臂成功写出第一个“Hello, World!”。
 
-void setup() {
-    Serial.begin(115200);
-    Serial.println("Final X-AXIS Test with ENABLE pin activated.");
+### **阶段四: 高级功能与优化 (目标：“它是个产品”阶段)**
 
-    // CRITICAL STEP: Enable all motor drivers on the CNC Shield
-    pinMode(ENABLE_PIN, OUTPUT);
-    digitalWrite(ENABLE_PIN, LOW); // Set to LOW to enable
+*   **目标:** 添加最终的智能和用户体验层，以实现项目的最终目标。
 
-    // Initialize the motor
-    stepper.begin(RPM, MICROSTEPS);
-}
+*   **任务列表:**
+    - [ ] **待办:** 集成摄像头以实现计算机视觉功能。
+    - [ ] **待办:** 使用OpenCV实现页面检测和答案框定位。
+    - [ ] **待办:** 连接到一个AI服务以进行字符/答案识别。
+    - [ ] **待办:** 设计并集成一个翻页机构 (例如，吸盘)。
+    - [ ] **待办:** 优化整体工作流程以提供流畅的用户体验。
 
-void loop() {
-    Serial.println("--> Rotating forward...");
-    stepper.rotate(360); // Rotate 360 degrees forward
-    delay(1000);
+---
 
-    Serial.println("<-- Rotating backward...");
-    stepper.rotate(-360); // Rotate 360 degrees backward
-    delay(2000);
-}
-```
+## **第二部分: 开发日志**
+
+### **2025年8月2日: 里程碑3 - GRBL配置与多轴运动测试**
+
+*   **目标:** 将GRBL固件配置为SCARA模式，并验证所有连接的电机都能根据G-code指令独立运动。
+*   **过程与发现:**
+    1.  **提取关键参数:** 我们分析了`scara-s1`项目作者提供的`Config.h`文件，从中提取了计算好的核心物理参数，如`A_STEPS_PER_DEGREE` (57.8) 和 `B_STEPS_PER_DEGREE` (33.33) 以及 `Z_STEPS_PER_MM` (400)。
+    2.  **配置GRBL:** 通过UGS的控制台，使用`$`命令成功将这些参数写入GRBL的EEPROM中。关键配置如下：
+        *   `$100=57.8` (X轴 -> A臂: 57.8 步/度)
+        *   `$101=33.33` (Y轴 -> B臂: 33.33 步/度)
+        *   `$102=400` (Z轴 -> Z轴: 400 步/毫米)
+    3.  **多轴测试:** 将A、B、Z三个电机分别连接到CNC Shield的X、Y、Z轴接口。
+*   **验证与成功:**
+    *   通过UGS的手柄或点动控制功能，**成功地让X、Y、Z三个电机各自独立旋转**。这证明了我们的硬件链路、GRBL固件、以及参数配置已经完全打通，为整机联调做好了准备。
+
+### **2025年8月2日: 里程碑2 - GRBL固件安装成功**
+
+*   **目标:** 将GRBL固件刷入Arduino Uno，将其转变为一个专用的G-code运动控制器。
+*   **过程与挑战:**
+    1.  **初次尝试:** 试图使用Arduino IDE的“添加.ZIP库”功能安装GRBL，但因`库无效(library not valid)`错误而失败。
+    2.  **问题根源:** `grbl-master.zip`文件是一个完整的项目，而非一个单纯的库，其文件夹结构与IDE的自动安装程序不兼容。
+    3.  **解决方案 (手动安装):**
+        *   定位到Arduino的项目文件夹中的`libraries`目录。
+        *   解压下载的`grbl-master.zip`。
+        *   进入`grbl-master`文件夹，并将其中的**内层`grbl`文件夹**复制到Arduino的`libraries`目录中。
+        *   重启Arduino IDE以使其识别新库。
+    4.  **刷写固件:** 打开`文件 > 示例 > grbl > grblUpload`示例代码，并将其上传到Arduino Uno。
+*   **验证与成功:**
+    *   上传后，将Arduino IDE的串口监视器波特率设置为**115200**，开发板成功返回GRBL的欢迎信息：
+    ```
+    Grbl 1.1h ['$' for help]
+    ```
+    这标志着运动控制板的软件设置已完成，系统现在准备好接收和解析G-code指令。
+
+### **2025年8月2日: 里程碑1 - 首次电机驱动成功**
+
+*   **目标:** 通过驱动单个NEMA 17步进电机，验证从Arduino Uno、CNC Shield V3到TMC2209驱动的整个基础硬件链路的功能完好性。
+*   **过程与挑战:**
+    1.  **初始设置:** 将TMC2209驱动和NEMA 17电机连接到CNC Shield的X轴端口。
+    2.  **初次失败:** 尽管Arduino代码在正常运行（通过串口监视器输出确认），但电机无任何响应。
+    3.  **故障排查:**
+        *   使用万用表确认了12V电机电源和5V逻辑电源均已正确送达TMC2209的`VM`和`VIO`引脚。
+        *   更换了备用的TMC2209驱动和步进电机，问题依旧，排除了单个组件损坏的可能性。
+        *   将硬件设置移至Y轴和Z轴端口，电机依然不动，表明问题是全局性的，而非单个轴通道故障。
+    4.  **突破:** 在查阅了所用CNC Shield的文档后，我们找到了根本原因：**代码中未激活全局使能引脚(D8)。**
+*   **关键发现:**
+    *   此款CNC Shield V3需要将**Arduino的D8引脚**拉至**低电平(LOW)**，才能使能所有的步进电机驱动模块。若无此操作，所有驱动将处于禁用状态，不会响应STEP脉冲信号。
+*   **最终可用的X轴测试代码:**
+    *   此代码成功驱动了X轴电机，并成为我们硬件设置的最终验证脚本。
+
+    ```cpp
+    #include <Arduino.h>
+    #include "BasicStepperDriver.h"
+
+    // CNC Shield v3 引脚定义
+    #define ENABLE_PIN 8 // 关键！所有驱动的总使能开关
+
+    #define DIR_PIN    5 // X轴方向引脚
+    #define STEP_PIN   2 // X轴步进引脚
+
+    // 电机参数
+    #define MOTOR_STEPS 200 // NEMA 17 每转步数
+    #define RPM 60          // 用于测试的稳定低转速
+    #define MICROSTEPS 8    // TMC2209 无跳线帽时的默认微步数
+
+    // 创建驱动实例
+    BasicStepperDriver stepper(MOTOR_STEPS, DIR_PIN, STEP_PIN);
+
+    void setup() {
+        Serial.begin(115200);
+        Serial.println("已激活使能引脚的最终X轴测试");
+
+        // 关键步骤: 使能CNC Shield上的所有电机驱动
+        pinMode(ENABLE_PIN, OUTPUT);
+        digitalWrite(ENABLE_PIN, LOW); // 设置为低电平以使能
+
+        // 初始化电机
+        stepper.begin(RPM, MICROSTEPS);
+    }
+
+    void loop() {
+        Serial.println("--> 正转中...");
+        stepper.rotate(360); // 正转360度
+        delay(1000);
+
+        Serial.println("<-- 反转中...");
+        stepper.rotate(-360); // 反转360度
+        delay(2000);
+    }
+    ```

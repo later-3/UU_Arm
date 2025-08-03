@@ -99,6 +99,25 @@ This document is an updated knowledge base for the SCARA Arm project, reflecting
 *   **[视频] 步进电机工作原理的绝佳可视化 (YouTube, Lesics):** [https://www.youtube.com/watch?v=bCEiI_O1-sU](https://www.youtube.com/watch?v=bCEiI_O1-sU)
 *   **[文章/视频] TMC2209 vs A4988深度对比 (YouTube, Teaching Tech):** [https://www.youtube.com/watch?v=dOJb_b35O_g](https://www.youtube.com/watch?v=dOJb_b35O_g)
 
+#### **2.5 核心概念：电机电源 vs. 逻辑电源 (The Two Hearts)**
+
+这是一个在调试中最关键、也最容易混淆的概念。理解它，就能理解所有电子模块的工作原理。我们可以把TMC2209驱动模块想象成一个非常强壮但需要听指令的工人。
+
+*   **电机电源 (Motor Power / VMOT):**
+    *   **这是什么？** 这就是您那个 **12V 10A** 的强大电源。它通过CNC Shield的蓝色端子接入，专门供给TMC2209。
+    *   **作用是什么？** 这是给“工人”吃的 **“饭”**，提供的是 **“体力”**。当工人需要推动重物（转动电机）时，他需要消耗大量的能量，这些能量就来自于这个12V的强大电源。没有这个电源，工人就浑身无力。
+    *   **特点：** 高电压 (12V-24V)，大电流 (几安培)。专门用来做“力气活”。
+
+*   **逻辑电源 (Logic Power / VIO):**
+    *   **这是什么？** 这个电源来自于 **Arduino主板的5V**，通过USB或者主板自身的稳压电路产生。它通过Arduino和CNC Shield之间的插针，供给TMC2209。
+    *   **作用是什么？** 这是给“工人”的 **“指令接收器”和“大脑”** 供电的。工人需要靠它来听懂老板（Arduino）发出的指令，比如“向前走一步”。没有这个电源，工人的大脑就不工作，即使他吃饱了饭（有12V电源），他也听不到指令，只会傻傻地待在原地。
+    *   **特点：** 低电压 (通常是3.3V或5V)，小电流 (毫安级别)。专门用来处理信息和信号。
+
+**结论：对于TMC2209，这两个电源缺一不可。** 我们后续用万用表排查，就是要确认这位“工人”是不是既有“体力”(VMOT=12V)，又能“思考”(VIO=5V)。
+
+**TMC2209 引脚图参考:**
+![TMC2209 Pinout](tmc2209.jpg)
+
 ---
 
 ## **第二部分：系统架构与软件 (The Mind & Soul)**

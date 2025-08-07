@@ -1,5 +1,63 @@
 # Assembly_Final v4 (Root Assembly)
+共有4个模块：
 - Base
+- Shoulder 肩
+- Forearm 小臂
+- Gripper 抓手
+
+# Base
+
+## Openbox
+这是机械臂底座盒子，里面包含了2个NEMA17电机，一个电机控制Z轴，一个电机通过gt2_20t-sh8轴连接到Floor BaseGT2 Timing Pulley, 控制A轴.
+- 2个NEMA17电机
+- 1个gt2_20t-sh8轴
+- 1个belt
+- top 面板 -> 3d打印件
+- bottom 面板 -> 3d打印件
+- slide 面板 x2 -> 3d打印件
+- front 面板 -> 3d打印件
+- back 面板 -> 3d打印件
+
+## 同步轮(timing pulley)模块
+openbox的一个电机通过gt2_20t-sh8轴连接到Floor BaseGT2 Timing Pulley.这就是A轴，带动整个大臂旋转。
+![同步轮(timing pulley)模块](./img/floor_baseGT2_timing_pulley.jpg)
+
+中间正方形的位置，是给openbox中另一个电机的，直接插入，这是z轴。
+- gt2_20_timing_pulley -> 3d打印件
+
+## 轴承模块
+主要是围绕轴承61816-2RS1展开的，与openbox里面的一个电机，达成控制A轴的任务。Floor BaseGT2 Timing Pulley通过螺丝与该模块连接。61816-2RS1里面套了两个3d打印件，都叫 Hosinginner,外面套了一个3d打印件，叫 HousingOuterStdmountHoles ，主要目的我认为是把整个模块包装起来了。整个轴承模块直接放到了openbox的top上面。
+
+- bearing -> 61816-2RS1,轴承 -> 购买件
+- Hosinginner 1 -> 3d打印件
+- Hosinginner 2 -> 3d打印件
+- HousingOuterStdmountHoles -> 3d打印件
+
+注：Hosinginner 2 是61816-2RS1的内层，Hosinginner 1 是61816-2RS1的外层。
+
+![同步轮(timing pulley)模块](./img/bearing_housing_80.jpg)
+
+## z轴模块
+这个模块是基于轴承模块的，有3根8mm光轴，直接插在Hosinginner 1 上面。中间是一根lead screw，用来连接z轴电机，是T8 丝杆。当然T8丝杆还需要一个trapezoidal lead screw nut，T8螺母座。
+
+- 1个Floor BaseGT2 Timing Pulley
+
+
+
+
+- Base
+
+
+    - Motors:1
+      - Motors
+        - NEMA_17_Wantai609 v1:1
+          - NEMA_17_Wantai609 v1
+            - Wantai609:1
+              - Wantai609
+        - NEMA_17_Wantai609 v1:2
+          - NEMA_17_Wantai609 v1.001
+            - Wantai609:1.001
+              - Wantai609.001
     - Bearing Housing 80
         - HousingInner
         - HousingOuterStdmountHoles
@@ -58,16 +116,7 @@
               - Side2
             - Top:1
               - Top
-    - Motors:1
-      - Motors
-        - NEMA_17_Wantai609 v1:1
-          - NEMA_17_Wantai609 v1
-            - Wantai609:1
-              - Wantai609
-        - NEMA_17_Wantai609 v1:2
-          - NEMA_17_Wantai609 v1.001
-            - Wantai609:1.001
-              - Wantai609.001
+
     - SmoothRod_Extra_Long_Clamp v1:1
       - SmoothRod_Extra_Long_Clamp v1
         - Limit Switch Panel:1

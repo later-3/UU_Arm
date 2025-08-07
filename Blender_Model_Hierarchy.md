@@ -38,10 +38,25 @@ openbox的一个电机通过gt2_20t-sh8轴连接到Floor BaseGT2 Timing Pulley.�
 ![同步轮(timing pulley)模块](./img/bearing_housing_80.jpg)
 
 ## z轴模块
-这个模块是基于轴承模块的，有3根8mm光轴，直接插在Hosinginner 1 上面。中间是一根lead screw，用来连接z轴电机，是T8 丝杆。当然T8丝杆还需要一个trapezoidal lead screw nut，T8螺母座。
+这个模块是基于轴承模块的，有3根8mm光轴，直接插在Hosinginner 1 上面。中间是一根lead screw，用来连接z轴电机，是T8 丝杆。当然T8丝杆还需要一个trapezoidal lead screw nut，T8螺母座。T8丝杆通过一个L30xD25 CouplerASM 8to8与openbox中的电机相连，这里有可能是标注错误，可能是5mm转8mm的。
 
-- 1个Floor BaseGT2 Timing Pulley
+- 1个T8 丝杆 -> 购买件
+- 1个T8 螺母座 -> 购买件
+- 1个L30xD25 CouplerASM 8to8,联轴器 -> 购买件
+- 3个8mm 光轴 -> 购买件
+- 3个smooth rod 30mm -> 3D打印件
 
+![z轴模块](./img/z_axis.jpg)
+
+## shoulder
+这个shoulder是我自己定义的，
+![同步轮(timing pulley)模块](./img/shoulder.jpg)
+
+最顶上是topclamp，起到稳固作用，然后是两个一样的圆形配件，用来连接大臂的，叫shoulderBase，然后是6个LM8UU，直线轴承，外面包裹了一个3d打印件用于固定，原作者是用扎带绑起来了。上下各有一个电机，控制小臂和夹爪旋转。
+
+- 6个LM8UU,直线轴承 -> 购买件
+- 2个shoulderBase -> 3d打印件
+- 1个topclamp -> 3d打印件
 
 
 

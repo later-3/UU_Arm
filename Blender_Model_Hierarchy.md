@@ -57,6 +57,10 @@ openbox的一个电机通过gt2_20t-sh8轴连接到Floor BaseGT2 Timing Pulley.�
 - 6个LM8UU,直线轴承 -> 购买件
 - 2个shoulderBase -> 3d打印件
 - 1个topclamp -> 3d打印件
+- 3个LM8UU的包裹件
+
+
+## 大臂
 
 
 
